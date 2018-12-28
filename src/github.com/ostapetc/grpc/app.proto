@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-service Greeter {
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
+service Instagram {
+  rpc SearchUsers (SearchUsersRequest) returns (SearchUsersReply) {}
 }
 
-message HelloRequest {
+message SearchUsersRequest {
   string name = 1;
 }
 
-message HelloReply {
+message SearchUsersReply {
   string message = 1;
 }

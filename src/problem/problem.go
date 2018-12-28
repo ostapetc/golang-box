@@ -1,51 +1,56 @@
-package fairrations
+package problem
 
-func FairRations(subjects []int32) int32 {
-	var result int32
+import (
+	"sort"
+)
 
-	posible := changePosible(subjects)
-
-	for posible == 1{
-		changeSubjects(subjects)
-		result += 2
-		posible = changePosible(subjects)
-
-		if posible == -1 {
-			return 0
-		}
-	}
-
-	return result
+type stat struct {
+	currVal int64
+	initVal int64
 }
 
-func changePosible(subjects []int32) int {
-	for i, value := range subjects {
-		if value % 2 != 0 {
-			if i == len(subjects) - 2 && subjects[i + 1] % 2 == 0 {
-				return -1
-			} else if i == len(subjects) - 1 && subjects[i - 1] % 2 == 0 {
-				return -1
-			}
 
-			return 1
-		}
+// Complete the minTime function below.
+func MinTime(machines []int64, goal int64) int64 {
+	done := int64(0)
+	day  := int64(0)
+	//days := getDays(machines)
+
+	stats := []stat{}
+	for _, machine := range machines {
+		stats = append(stats, stat{machine, machine})
 	}
 
-	return 0
+	sort.Slice(stats, func(i, j int) bool {
+		return stats[i].initVal < stats[j].initVal
+	})
+
+	for done != goal {
+		s := stats[0]
+		stats = stats[1:]
+		day = s.currVal
+		s.currVal += s.initVal;
+		stats = insertDay(stats, s)
+		done++
+	}
+
+	return day
 }
 
-func changeSubjects(subjects []int32) {
-	for i, value := range subjects {
-		if value % 2 != 0 {
-			subjects[i]++
+func insertDay(stats []stat, s stat) []stat {
+	stats = append(stats, s)
+	j := len(stats) - 1
 
-			if (i + 1 == len(subjects)) { //last {
-				subjects[i - 1]++
-			} else {
-				subjects[i + 1]++
-			}
-
-			break
-		}
+	for j > 0 && stats[j].currVal < stats[j - 1].currVal {
+		swap(stats, j, j - 1)
+		j--
 	}
+
+	return stats
+}
+
+func swap(stats []stat, i, j int) {
+	tmp := stats[i]
+	stats[i] = stats[j]
+	stats[j] = tmp
 }

@@ -1,0 +1,4 @@
+GET	/accounts/group/?keys=interests&city=%D0%9B%D0%B5%D0%B9%D0%BF%D0%BE%D0%B2%D1%81%D0%BA&order=-1&query_id=397&birth=1999&limit=10		
+
+
+{"groups":[{"count":2,"interests":"\u0421\u0438\u043c\u043f\u0441\u043e\u043d\u044b"},{"count":1,"interests":"\u041e\u0431\u0449\u0435\u043d\u0438\u0435"},{"count":1,"interests":"\u0414\u0440\u0443\u0437\u044c\u044f \u0438 \u0411\u043b\u0438\u0437\u043a\u0438\u0435"}]}
