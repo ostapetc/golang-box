@@ -7,32 +7,45 @@ import (
 )
 
 func done(name string) {
-	if true {
+	if false {
 		fmt.Println("Done " + name)
 	}
 }
 
-func TestGetLeafs(t *testing.T) {
-	//	     100
-	//	   /     \
-	//	  70      40
-	//   /  \    /  \
-	//  30  25  10   5
-
-	values := []int{100, 70, 40, 30, 25, 10, 5}
-	leafs  := []int {30, 25, 10, 5}
-
-	heap := NewMaxHeap()
-	heap.SetValues(values)
-
-	if !reflect.DeepEqual(heap.GetLeafs(), leafs) {
-		t.Error("expected leafs", leafs, "got", heap.GetLeafs())
+func TestMaxHeap_GetLeafs(t *testing.T) {
+	type test struct {
+		values []int
+		expect []int
 	}
 
-	done("TestGetLeafs");
+	tests := []test{
+		//	     100
+		//	   /     \
+		//	  70      40
+		//   /  \    /  \
+		//  30  25  10   5
+		{[]int{100, 70, 40, 30, 25, 10, 5}, []int {30, 25, 10, 5}},
+		//	     100
+		//	   /     \
+		//	  70      40
+		//   /  \    /
+		//  30  25  10
+		{[]int{100, 70, 40, 30, 25, 10}, []int {30, 25, 10}},
+	}
+
+	for _, test := range tests {
+		heap := NewMaxHeap()
+		heap.SetValues(test.values)
+
+		if !reflect.DeepEqual(heap.GetLeafs(), test.expect) {
+			t.Error("expected leafs", test.expect, "got", heap.GetLeafs())
+		}
+	}
+
+	done("TestMaxHeap_GetLeafs")
 }
 
-func TestBuild(t *testing.T) {
+func TestMaxHeap_Build(t *testing.T) {
 	size := 10
 	vals := []int{}
 
@@ -43,15 +56,17 @@ func TestBuild(t *testing.T) {
 	heap := NewMaxHeap()
 	heap.SetValues(vals)
 
-	if MaxHeapValid(heap) {
+	if heap.Valid() {
 		t.Error("Unexpected valid heap")
 	}
 
 	heap.Build()
 
-	if !MaxHeapValid(heap) {
+	if !heap.Valid() {
 		t.Error("Unexpected invalid heap")
 	}
+
+	done("TestMaxHeap_Build")
 }
 
 func TestMaxHeap_SetValues(t *testing.T) {
@@ -67,7 +82,7 @@ func TestMaxHeap_SetValues(t *testing.T) {
 	done("TestMaxHeap_SetValues")
 }
 
-func TestHeapValid(t *testing.T) {
+func TestMaxHeap_Valid(t *testing.T) {
 	type test struct {
 		values []int
 		expect bool
@@ -100,14 +115,14 @@ func TestHeapValid(t *testing.T) {
 		heap := NewMaxHeap()
 		heap.SetValues(test.values)
 
-		result := MaxHeapValid(heap)
+		result := heap.Valid()
 
 		if result != test.expect {
 			t.Error("For heap", heap.GetValues(), "expected", test.expect, "but got", result)
 		}
 	}
 
-	done("TestHeapValid")
+	done("TestMaxHeap_Valid")
 }
 
 func TestMaxHeap_Append(t *testing.T) {
@@ -116,7 +131,7 @@ func TestMaxHeap_Append(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		heap.Append(i)
 
-		if !MaxHeapValid(heap) {
+		if !heap.Valid() {
 			t.Error("Heap is not valid")
 		}
 	}
@@ -201,7 +216,7 @@ func TestMaxHeap_ExtractMax(t *testing.T) {
 			t.Error(i, "expected", test.max, "but got", max)
 		}
 
-		if !MaxHeapValid(heap) {
+		if !heap.Valid() {
 			t.Error(i, "Heap is not valid")
 		}
 
